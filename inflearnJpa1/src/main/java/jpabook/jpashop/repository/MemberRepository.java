@@ -27,7 +27,7 @@ public class MemberRepository {
     }
 
     public List<Member> findBByName(String name) {
-        return em.createQuery("select m from m Member m where m.name :name", Member.class)
+        return em.createQuery("select m from Member m where m.name = :name", Member.class)
                 .setParameter("name", name)
                 .getResultList();
     }
