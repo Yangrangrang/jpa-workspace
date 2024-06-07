@@ -22,11 +22,11 @@ public class ItemService {
     }
 
     @Transactional
-    public void updateItem(Long id, Book bookParam) {
+    public void updateItem(Long id, int price, String name, int stockQuantity) {
         Item findItem = itemRepository.findOne(id);
-        findItem.setPrice(bookParam.getPrice());
-        findItem.setName(bookParam.getName());
-        findItem.setStockQuantity(bookParam.getStockQuantity());
+        findItem.setPrice(price);
+        findItem.setName(name);
+        findItem.setStockQuantity(stockQuantity);
 
         // 아무것도 해줄 필요 없다.
         // findItem으로 가져온건 준영속성이 아닌 영속성 상태이기때문에
