@@ -8,11 +8,45 @@ import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @RestController
 @RequiredArgsConstructor
 public class MemberApiController {
 
     private final MemberService memberService;
+
+    @GetMapping("/api/v1/members")
+    public List<Member> memberV1() {    // entity를 직접 반환하면 안된다.
+        return memberService.findMembers();
+    }
+
+    @GetMapping("/api/v2/members")
+    public Result memberV2() {
+        List<Member> findMembers = memberService.findMembers();
+        List<MemberDto> collect = findMembers.stream()
+                .map(m -> new MemberDto(m.getId(),m.getName()))
+                .collect(Collectors.toList());
+
+        int count = collect.size();
+
+        return new Result(count,collect);
+    }
+
+    @Data
+    @AllArgsConstructor
+    static class Result<T> {
+        private int count;
+        private T data;
+    }
+
+    @Data
+    @AllArgsConstructor
+    static class MemberDto {
+        private Long id;
+        private String name;
+    }
 
     @PostMapping("/api/v1/members") // 유일한 장점은 class를 안만들어도 된다. Entity를 변경하게 되면 API 스펙이 변경됨.
     public CreateMemberResponse saveMemberV1(@RequestBody @Valid Member member) {
