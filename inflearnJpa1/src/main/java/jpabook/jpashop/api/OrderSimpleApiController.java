@@ -24,7 +24,10 @@ public class OrderSimpleApiController {
     @GetMapping("/api/v1/simple-orders")
     public List<Order> orderV1() {
         List<Order> all = orderRepository.findAllByString(new OrderSearch());
-        System.out.println("all = " + all.toString());
+        for (Order order : all) {
+            order.getMember().getName();    // getMember() 만 하면 프록시 객체 .getName까지하면 Lazy 강제 초기화
+            order.getDelivery().getAddress();   // Lazy 강제 초기화
+        }
         return all;
     }
 }
