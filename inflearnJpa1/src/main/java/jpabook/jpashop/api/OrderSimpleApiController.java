@@ -5,6 +5,7 @@ import jpabook.jpashop.domain.Order;
 import jpabook.jpashop.domain.OrderStatus;
 import jpabook.jpashop.repository.OrderRepository;
 import jpabook.jpashop.repository.OrderSearch;
+import jpabook.jpashop.repository.OrderSimpleQueryDto;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -79,6 +80,15 @@ public class OrderSimpleApiController {
         return result;
     }
 
+    /**
+     * v4. 엔티티를 조회해서 DTO로 변환 직접 쿼리 작성
+     * select 절에 내가 원하는 데이터만 가져옴.
+     * - 로직을 재활용 할 수가 없다.
+     */
+    @GetMapping("/api/v4/simple-orders")
+    public List<OrderSimpleQueryDto> orderV4() {
+        return orderRepository.findOrderDtos();
+    }
 
     @Data
     static class SimpleOrderDto {
