@@ -103,4 +103,30 @@ public class OrderApiController {
             count = orderItem.getCount();
         }
     }
+
+    /**
+     * v3. fetch join 사용
+     * 일대다 패치 조인에서는 페이징을 하면 안된다. (강의 패치조인 최적화 확인)
+     * 강의에서는 v3으로 실행을 할 경우, 결과가 4개가 나오는데 이유는 findAllWithItem 메소드에서 orderItem 이랑 패치 조인을 하기 때문
+     * 해서 강의에서는 해당 메소드에서 select 문에 distinct 를 작성해주는데
+     * 강의 듣는 시점에서 확인 해봤을 때 distinct 를 작성하지 않아도 결과값이 2개로 나오는 걸 확인
+     * 스프링부트3, 하이버네이트6버전 사용 시 자동으로 distinct 가 적용되었기 때문으로 확인
+     * (참고 https://docs.jboss.org/hibernate/orm/current/userguide/html_single/Hibernate_User_Guide.html#hql-distinct)
+     */
+    @GetMapping("v3/orders")
+    public List<OrderDto> ordersV3() {
+        log.info(">>>>>>>> v3/orders");
+
+        List<Order> orders = orderRepository.findAllWithItem();
+
+        for (Order order : orders) {
+            System.out.println("order + \" id\" + order.getId() = " + order + " id" + order.getId());
+        }
+
+        List<OrderDto> result = orders.stream()
+                .map(o -> new OrderDto(o))
+                .collect(Collectors.toList());
+
+        return result;
+    }
 }
