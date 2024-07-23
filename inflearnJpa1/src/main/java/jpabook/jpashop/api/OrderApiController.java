@@ -71,7 +71,7 @@ public class OrderApiController {
         private LocalDateTime orderDate;
         private OrderStatus orderStatus;
         private Address address;
-        private List<OrderItem> orderItems;
+        private List<OrderItemDto> orderItems;
 
         public OrderDto (Order order) {
             orderId = order.getId();
@@ -79,10 +79,28 @@ public class OrderApiController {
             orderDate = order.getOrderDate();
             orderStatus = order.getStatus();
             address = order.getDelivery().getAddress();
-            order.getOrderItems().stream().forEach(o -> o.getItem().getName());
-            orderItems = order.getOrderItems();     // 이렇게만 하면 엔티티 이기때문에 결과가 null로 나옴. 위에 stream으로 반복문을 돌려줘야 원하는 값을 얻음.
-            
+
+//            order.getOrderItems().stream().forEach(o -> o.getItem().getName());
+//            orderItems = order.getOrderItems();     // 이렇게만 하면 엔티티 이기때문에 결과가 null로 나옴. 위에 stream으로 반복문을 돌려줘야 원하는 값을 얻음.
+//            이렇게 하면 OrderItem 은 엔티티로 노출이 되기 때문에 OrderItemDto 로 감싸줘야함.
+
+            orderItems = order.getOrderItems().stream()
+                    .map(orderItem -> new OrderItemDto(orderItem))
+                    .collect(Collectors.toList());
         }
     }
 
+    @Getter
+    static class OrderItemDto {
+
+        private String itemName;    // 상품명
+        private int orderPrice;     // 주문가격
+        private int count;          // 수량
+
+        public OrderItemDto(OrderItem orderItem) {
+            itemName = orderItem.getItem().getName();
+            orderPrice = orderItem.getOrderPrice();
+            count = orderItem.getCount();
+        }
+    }
 }
