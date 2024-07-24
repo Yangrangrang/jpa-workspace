@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.aspectj.weaver.ast.Or;
+import org.hibernate.annotations.BatchSize;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -28,6 +29,7 @@ public class Order {
     @JoinColumn(name = "member_id") // 주문한 회원에 대한 매핑
     private Member member;
 
+    @BatchSize(size = 1000)     // 글로벌 하게 적용을 할 때는 application.yaml 파일에 default_batch_fetch_size 적용. @BatchSize 는 디테일하게 적용
     @OneToMany(mappedBy = "order", cascade = ALL)
     private List<OrderItem> orderItems = new ArrayList<>();
 
