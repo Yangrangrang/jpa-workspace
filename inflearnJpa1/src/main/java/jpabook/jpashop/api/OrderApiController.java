@@ -6,6 +6,8 @@ import jpabook.jpashop.domain.OrderItem;
 import jpabook.jpashop.domain.OrderStatus;
 import jpabook.jpashop.repository.OrderRepository;
 import jpabook.jpashop.repository.OrderSearch;
+import jpabook.jpashop.repository.order.queryRepository.OrderQueryDto;
+import jpabook.jpashop.repository.order.queryRepository.OrderQueryRepository;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -25,6 +27,7 @@ import java.util.stream.Collectors;
 public class OrderApiController {
 
     private final OrderRepository orderRepository;
+    private final OrderQueryRepository orderQueryRepository;
 
     /**
      * v1. 엔티티 직접 노출
@@ -74,7 +77,7 @@ public class OrderApiController {
         private Address address;
         private List<OrderItemDto> orderItems;
 
-        public OrderDto (Order order) {
+        public OrderDto(Order order) {
             orderId = order.getId();
             name = order.getMember().getName();
             orderDate = order.getOrderDate();
@@ -148,5 +151,13 @@ public class OrderApiController {
                 .collect(Collectors.toList());
 
         return result;
+    }
+
+    /**
+     * v4. DTO 직접 조회
+     */
+    @GetMapping("v4/orders")
+    public List<OrderQueryDto> orderV4() {
+        return orderQueryRepository.findOrderQueryDtos();
     }
 }
