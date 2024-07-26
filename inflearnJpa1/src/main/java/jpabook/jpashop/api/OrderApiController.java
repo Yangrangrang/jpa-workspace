@@ -160,4 +160,12 @@ public class OrderApiController {
     public List<OrderQueryDto> orderV4() {
         return orderQueryRepository.findOrderQueryDtos();
     }
+
+    /**
+     * v5. DTO 직접 조회 N+1 수정
+     */
+    @GetMapping("v5/orders")
+    public List<OrderQueryDto> orderV5() {
+        return orderQueryRepository.findAllByDto_optimization();
+    }
 }
