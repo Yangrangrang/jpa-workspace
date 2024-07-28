@@ -6,6 +6,8 @@ import jpabook.jpashop.domain.OrderItem;
 import jpabook.jpashop.domain.OrderStatus;
 import jpabook.jpashop.repository.OrderRepository;
 import jpabook.jpashop.repository.OrderSearch;
+import jpabook.jpashop.repository.order.queryRepository.OrderFlatDto;
+import jpabook.jpashop.repository.order.queryRepository.OrderItemQueryDto;
 import jpabook.jpashop.repository.order.queryRepository.OrderQueryDto;
 import jpabook.jpashop.repository.order.queryRepository.OrderQueryRepository;
 import lombok.Getter;
@@ -19,6 +21,8 @@ import org.springframework.web.bind.annotation.RestController;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
+
+import static java.util.stream.Collectors.*;
 
 @Slf4j
 @RestController
@@ -158,6 +162,8 @@ public class OrderApiController {
      */
     @GetMapping("v4/orders")
     public List<OrderQueryDto> orderV4() {
+        log.info(">>>>>>>> v4/orders");
+
         return orderQueryRepository.findOrderQueryDtos();
     }
 
@@ -166,6 +172,30 @@ public class OrderApiController {
      */
     @GetMapping("v5/orders")
     public List<OrderQueryDto> orderV5() {
+        log.info(">>>>>>>> v5/orders");
+
         return orderQueryRepository.findAllByDto_optimization();
+    }
+
+    /**
+     * v6. DTO 직접 조회 쿼리1번 (데이터는 중복) 페이징을 할수는 있지만 원하는 스타일 페이징으로는 안됨.
+     */
+    @GetMapping("v6/orders")
+    public List<OrderQueryDto> orderV6() {   // 반환 타입을 OrderFlatDto 가 아닌 OrderQueryDto로 하고 싶으면, 노가다를 해야한다....
+        log.info(">>>>>>>> v6/orders");
+
+        List<OrderFlatDto> flats = orderQueryRepository.findAllByDto_flat();
+
+        // 메모리에서 변환타입을 변경 (order 기준으로는 페이징이 안딤.)
+        return flats.stream()
+                .collect(groupingBy(o -> new OrderQueryDto(o.getOrderId(),
+                                o.getName(), o.getOrderDate(), o.getOrderStatus(), o.getAddress()),
+                        mapping(o -> new OrderItemQueryDto(o.getOrderId(),
+                                o.getItemName(), o.getOrderPrice(), o.getCount()), toList())
+                )).entrySet().stream()
+                .map(e -> new OrderQueryDto(e.getKey().getOrderId(),
+                        e.getKey().getName(), e.getKey().getOrderDate(), e.getKey().getOrderStatus(),
+                        e.getKey().getAddress(), e.getValue()))
+                .collect(toList());
     }
 }
