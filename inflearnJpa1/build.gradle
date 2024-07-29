@@ -36,6 +36,10 @@ dependencies {
     // 하이버네이트 모듈
     implementation 'com.fasterxml.jackson.datatype:jackson-datatype-hibernate5-jakarta'
 
+    // swagger
+    implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.5.0'
+    annotationProcessor 'com.github.therapi:therapi-runtime-javadoc-scribe:0.15.0'
+
     compileOnly 'org.projectlombok:lombok'
     runtimeOnly 'com.h2database:h2:2.2.224'
 
