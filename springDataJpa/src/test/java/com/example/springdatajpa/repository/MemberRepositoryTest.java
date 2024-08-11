@@ -10,6 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -142,5 +143,27 @@ class MemberRepositoryTest {
         for (Member member : result) {
             System.out.println("member = " + member);
         }
+    }
+
+    @Test
+    public void returnType() {
+        Member m1 = new Member("AAA", 10);
+        Member m2 = new Member("BBB", 20);
+        memberRepository.save(m1);
+        memberRepository.save(m2);
+
+        List<Member> aaa = memberRepository.findListByUsername("AAA");
+        System.out.println("aaa = " + aaa);
+        List<Member> aa1 = memberRepository.findListByUsername("dasdasd");
+        System.out.println("aa1 = " + aa1);
+        System.out.println("aa1.size() = " + aa1.size());
+        // 단건의 경우 순수 JPA 에서는 Exception 터트리지만 spring data jpa 에서는 null 로 반환함
+        Member bbb = memberRepository.findMemberByUsername("AAA");
+        System.out.println("bbb = " + bbb);
+        // 자바8 이후에는 그냥 Optional 을 씀.
+        Optional<Member> ccc = memberRepository.findOptionalByUsername("AAA");
+        System.out.println("ccc = " + ccc);
+        System.out.println("ccc.get() = " + ccc.get());
+        
     }
 }
