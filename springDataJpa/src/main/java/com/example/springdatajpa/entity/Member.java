@@ -1,10 +1,7 @@
 package com.example.springdatajpa.entity;
 
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.*;
 
 @Entity
 @Getter
@@ -21,7 +18,7 @@ public class Member {
     @GeneratedValue
     @Column(name = "member_id")
     private Long id;
-    private String username;
+    @Setter private String username;
     private int age;
 
     @ManyToOne(fetch = FetchType.LAZY)
