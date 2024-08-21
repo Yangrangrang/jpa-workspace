@@ -290,4 +290,9 @@ class MemberRepositoryTest {
         //when
         List<Member> result = memberRepository.findLockByUsername("member1");
     }
+
+    @Test   // 실행 되는 거만 확인
+    public void callCustom() {
+        List<Member> result = memberRepository.findMemberCustom();
+    }
 }
