@@ -16,8 +16,8 @@ class ItemRepositoryTest {
     @Test
     public void save() {
 
-//        Item item = new Item("A");
-        Item item = new Item();
+        Item item = new Item("A");
+//        Item item = new Item();
         itemRepository.save(item);
     }
 }

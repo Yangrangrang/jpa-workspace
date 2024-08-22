@@ -9,14 +9,14 @@ import lombok.NoArgsConstructor;
 
 @Entity
 @Getter
-//@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Item {
 
     @Id
     @GeneratedValue
-    private Long id;
+    private String id;
 
-//    public Item(String id) {
-//        this.id = id;
-//    }
+    public Item(String id) {
+        this.id = id;
+    }
 }
