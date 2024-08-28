@@ -4,7 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 @Entity
-@Getter
+@Getter @Setter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @ToString(of = {"id", "username", "age"})
 @NamedQuery(
@@ -18,7 +18,7 @@ public class Member extends BaseEntity{
     @GeneratedValue
     @Column(name = "member_id")
     private Long id;
-    @Setter private String username;
+    private String username;
     private int age;
 
     @ManyToOne(fetch = FetchType.LAZY)
