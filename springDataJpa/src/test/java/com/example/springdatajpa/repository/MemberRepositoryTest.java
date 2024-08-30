@@ -363,10 +363,10 @@ class MemberRepositoryTest {
         em.clear();
 
         //when
-        List<UserNameOnly> result = memberRepository.findProjectionsByUsername("m1");
+        List<UsernameOnlyDto> result = memberRepository.findProjectionsByUsername("m1", UsernameOnlyDto.class);
 
-        for (UserNameOnly userNameOnly : result) {
-            System.out.println("userNameOnly = " + userNameOnly);
+        for (UsernameOnlyDto usernameOnly : result) {
+            System.out.println("userNameOnly = " + usernameOnly);
         }
 
         //then
