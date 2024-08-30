@@ -77,7 +77,7 @@ class MemberJpaRepositoryTest {
     @Test
     public void testNamedQuery() {
         Member m1 = new Member("AAA", 10);
-        Member m2 = new Member("BBB", 20);
+        Member m2 = new Member("BBB", 15);
         memberJpaRepository.save(m1);
         memberJpaRepository.save(m2);
 
@@ -90,13 +90,13 @@ class MemberJpaRepositoryTest {
     @Test
     public void paging() {
         // given
-        memberJpaRepository.save(new Member("member1", 10));
-        memberJpaRepository.save(new Member("member2", 10));
-        memberJpaRepository.save(new Member("member3", 10));
-        memberJpaRepository.save(new Member("member4", 10));
-        memberJpaRepository.save(new Member("member5", 10));
+        memberJpaRepository.save(new Member("member1", 11));
+        memberJpaRepository.save(new Member("member2", 11));
+        memberJpaRepository.save(new Member("member3", 11));
+        memberJpaRepository.save(new Member("member4", 11));
+        memberJpaRepository.save(new Member("member5", 11));
 
-        int age = 10;
+        int age = 11;
         int offset = 0;
         int limit = 3;
 
