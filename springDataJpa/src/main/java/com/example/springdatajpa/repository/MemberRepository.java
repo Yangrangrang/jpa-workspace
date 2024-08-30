@@ -66,4 +66,6 @@ public interface MemberRepository extends JpaRepository<Member, Long> , MemberRe
     // 실시간 트래픽이 많은 서비스에선 가급적이면 lock 을 걸면 안된다.
     @Lock(LockModeType.PESSIMISTIC_WRITE)
     List<Member> findLockByUsername(String username);
+
+    List<UserNameOnly> findProjectionsByUsername(@Param("username") String username);
 }
