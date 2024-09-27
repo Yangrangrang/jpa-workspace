@@ -1,6 +1,7 @@
 package com.example.querydsl;
 
 import com.example.querydsl.dto.MemberDto;
+import com.example.querydsl.dto.QMemberDto;
 import com.example.querydsl.dto.UserDto;
 import com.example.querydsl.entity.Member;
 import com.example.querydsl.entity.QMember;
@@ -560,7 +561,7 @@ public class QuerydslBasicTest {
     }
 
     @Test   // 생성자 방법(UserDto)
-    public void findUserDtoByConstructor() {
+    public void findUserDtoByConstructor() {    // 단점이 런타임 오류가 남.
         List<UserDto> result = queryFactory
                 .select(Projections.constructor(UserDto.class,
                         member.username,
@@ -570,6 +571,18 @@ public class QuerydslBasicTest {
 
         for (UserDto userDto : result) {
             System.out.println("memberDto = " + userDto);
+        }
+    }
+
+    @Test
+    public void findDtoByQueryProjection() {    // 컴파일 오류로 바로 확인 가능
+        List<MemberDto> result = queryFactory
+                .select(new QMemberDto(member.username, member.age))
+                .from(member)
+                .fetch();
+
+        for (MemberDto memberDto : result) {
+            System.out.println("memberDto = " + memberDto);
         }
     }
 }
