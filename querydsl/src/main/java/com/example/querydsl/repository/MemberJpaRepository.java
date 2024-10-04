@@ -3,7 +3,6 @@ package com.example.querydsl.repository;
 import com.example.querydsl.entity.Member;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
-import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -17,9 +16,9 @@ public class MemberJpaRepository {
     private final EntityManager em;
     private final JPAQueryFactory queryFactory;
 
-    public MemberJpaRepository(EntityManager em, JPAQueryFactory jpaQueryFactory) {
+    public MemberJpaRepository(EntityManager em) {
         this.em = em;
-        this.queryFactory = jpaQueryFactory;
+        this.queryFactory = new JPAQueryFactory(em);
     }
 
     public void save(Member member) {
