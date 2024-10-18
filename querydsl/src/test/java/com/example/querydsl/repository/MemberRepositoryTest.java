@@ -29,6 +29,9 @@ class MemberRepositoryTest {
     @Autowired
     MemberRepository memberRepository;
 
+    @Autowired
+    MemberTestRepository memberTestRepository;
+
     @Test
     public void basicTest() {
         Member member = new Member("member1", 10);
@@ -91,7 +94,8 @@ class MemberRepositoryTest {
         MemberSearchCondition condition = new MemberSearchCondition();
         PageRequest pageRequest = PageRequest.of(0, 3);
 
-        Page<MemberTeamDto> result = memberRepository.searchComplex(condition, pageRequest);
+//        Page<MemberTeamDto> result = memberRepository.searchComplex(condition, pageRequest);
+        Page<MemberTeamDto> result = memberTestRepository.applyPagination2(condition, pageRequest);
 
         assertThat(result.getSize()).isEqualTo(3);
         assertThat(result.getContent()).extracting("username").containsExactly("member1", "member2", "member3");
