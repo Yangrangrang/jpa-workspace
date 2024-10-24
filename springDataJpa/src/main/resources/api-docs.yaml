@@ -1,0 +1,1158 @@
+openapi: 3.0.1
+info:
+  title: TastUtopia
+  description: 나만의 맛집
+  version: v1.0.0
+servers:
+  - url: http://localhost:8080
+    description: Generated server url
+tags:
+  - name: User API
+    description: 회원 관련 API
+  - name: Review API
+    description: 리뷰 관련 API
+  - name: Store API
+    description: 가게 관련 API
+paths:
+  /users:
+    get:
+      tags:
+        - User API
+      summary: 회원 전체 조회
+      description: 회원 전체 조회를 합니다.
+      operationId: userList
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseDtoBoolean'
+              examples:
+                USER_FINDALL:
+                  value:
+                    code: 200
+                    status: SUCCESS
+                    data: "[ { \"seq\": 0, \"userId\": \"string\", \"nickName\": \"\
+                      string\", \"email\": \"string\", \"embdate\": \"LocalDateTime\"\
+                      , \"admin\": \"USER ADMIN\", \"UserStatus\": \"Y, N, HUMAN\"\
+                      } ]"
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseDtoBoolean'
+              examples:
+                DEFAULT:
+                  value:
+                    code: 500
+                    status: FAIL
+                    message: 에러 메세지 입니다.
+    put:
+      tags:
+        - User API
+      summary: 회원 정보 수정
+      description: 회원 정보를 수정합니다. (seq는 필수값으로 넣어주세요.)
+      operationId: updateUser
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateUserRequestDto'
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseDtoBoolean'
+              examples:
+                USER_UPDATE_SUCCESS:
+                  description: userSeq 값
+                  value:
+                    code: 200
+                    status: SUCCESS
+                    data: "0"
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseDtoBoolean'
+              examples:
+                DEFAULT:
+                  value:
+                    code: 500
+                    status: FAIL
+                    message: 에러 메세지 입니다.
+    post:
+      tags:
+        - User API
+      summary: 회원 가입
+      description: 새로운 회원 가입합니다.
+      operationId: joinUser
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/JoinUserRequestDto'
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseDtoBoolean'
+              examples:
+                USER_JOIN_SUCCESS:
+                  description: userSeq 값
+                  value:
+                    code: 200
+                    status: SUCCESS
+                    data: "0"
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseDtoBoolean'
+              examples:
+                DEFAULT:
+                  value:
+                    code: 500
+                    status: FAIL
+                    message: 에러 메세지 입니다.
+  /users/{userStatus}:
+    put:
+      tags:
+        - User API
+      operationId: updateUserStatus
+      parameters:
+        - name: userStatus
+          in: path
+          required: true
+          schema:
+            type: string
+            enum:
+              - "Y"
+              - "N"
+              - HUMAN
+        - name: seqs
+          in: query
+          required: true
+          schema:
+            type: array
+            items:
+              type: integer
+              format: int32
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: string
+  /stores/{storeId}:
+    get:
+      tags:
+        - Store API
+      summary: 가게 단건 조회 (storeId)
+      description: storeId 조회 합니다.
+      operationId: findStoreBySeq
+      parameters:
+        - name: storeId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ResponseDtoStoreResponseDto'
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseDtoBoolean'
+              examples:
+                DEFAULT:
+                  value:
+                    code: 500
+                    status: FAIL
+                    message: 에러 메세지 입니다.
+    put:
+      tags:
+        - Store API
+      summary: '가게 수정 '
+      description: 가게 정보를 수정합니다. (kakaoIdx는 필수값으로 넣어주세요.)
+      operationId: updateStore
+      parameters:
+        - name: storeId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/StoreRequestDto'
+        required: true
+      responses:
+        "200":
+          headers:
+            하나더:
+              description: 테스트 해보자
+              schema:
+                type: 타입은 스트링
+            디폴트 이름 테스트:
+              description: 상세설명 테스트
+              schema:
+                type: 타입은
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseDtoBoolean'
+              examples:
+                STORE_LIST:
+                  value:
+                    code: 200
+                    status: SUCCESS
+                    data:
+                      - kakaoIdx: kakaoIdx
+                        storeName: 가게이름
+                        category: 카테고리
+                        latitude: 37.55467884
+                        longitude: 126.9706069
+                        region: 지역
+                        detailAddress: 상세주소
+                        zipcode: 우편번호
+                        createDate: 2024-10-22T14:00:11.677367
+                        updateDate: 2024-10-22T14:00:11.67737
+        "201":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseDtoBoolean'
+              examples:
+                MISSING_REQUIRED_FIELDS:
+                  value:
+                    code: 500
+                    status: FAIL
+                    message: 필수 입력 항목이 누락되었습니다.
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseDtoBoolean'
+              examples:
+                DEFAULT:
+                  value:
+                    code: 500
+                    status: FAIL
+                    message: 에러 메세지 입니다.
+    delete:
+      tags:
+        - Store API
+      summary: '가게 삭제 '
+      description: seq 값으로 가게를 삭제합니다.
+      operationId: deleteStore
+      parameters:
+        - name: storeId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ResponseDtoBoolean'
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseDtoBoolean'
+              examples:
+                DEFAULT:
+                  value:
+                    code: 500
+                    status: FAIL
+                    message: 에러 메세지 입니다.
+  /reviews/{reviewId}:
+    put:
+      tags:
+        - Review API
+      summary: 리뷰 수정
+      description: 리뷰를 수정합니다.
+      operationId: updateReview
+      parameters:
+        - name: reviewId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ReviewRequestDto'
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseDtoBoolean'
+              examples:
+                REVIEW_UPDATE_SUCCESS:
+                  description: 수정 성공 시 수정된 reviewId 값 반환
+                  value:
+                    code: 200
+                    status: SUCCESS
+                    data: reviewId 값
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseDtoBoolean'
+              examples:
+                DEFAULT:
+                  value:
+                    code: 500
+                    status: FAIL
+                    message: 에러 메세지 입니다.
+    delete:
+      tags:
+        - Review API
+      summary: 특정 리뷰 삭제
+      description: 특정 리뷰를 삭제합니다.
+      operationId: deleteReview
+      parameters:
+        - name: reviewId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseDtoBoolean'
+              examples:
+                REVIEW_DELETE_SUCCESS:
+                  description: 삭제 성공 시 삭제된 reviewId 값 반환
+                  value:
+                    code: 200
+                    status: SUCCESS
+                    data: reviewId 값
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseDtoBoolean'
+              examples:
+                DEFAULT:
+                  value:
+                    code: 500
+                    status: FAIL
+                    message: 에러 메세지 입니다.
+  /stores:
+    get:
+      tags:
+        - Store API
+      summary: 가게 전체 조회
+      description: 가게를 전체 조회 합니다.
+      operationId: storeList
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ResponseDtoListStoreResponseDto'
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseDtoBoolean'
+              examples:
+                DEFAULT:
+                  value:
+                    code: 500
+                    status: FAIL
+                    message: 에러 메세지 입니다.
+    post:
+      tags:
+        - Store API
+      summary: 가게 저장
+      description: 가게를 저장합니다. (만약 기존 저장된 가게는 저장되지 않습니다.)
+      operationId: createStore
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/StoreRequestDto'
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ResponseDtoLong'
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseDtoBoolean'
+              examples:
+                DEFAULT:
+                  value:
+                    code: 500
+                    status: FAIL
+                    message: 에러 메세지 입니다.
+                UNKNOWN:
+                  value:
+                    code: 500
+                    status: FAIL
+                    message: 알 수 없는 오류가 발생했습니다.
+  /reviews:
+    get:
+      tags:
+        - Review API
+      summary: 전체 리뷰 조회
+      description: 전체 리뷰를 조회합니다.
+      operationId: getAllReviews
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ResponseDtoListReviewResponseDto'
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseDtoBoolean'
+              examples:
+                DEFAULT:
+                  value:
+                    code: 500
+                    status: FAIL
+                    message: 에러 메세지 입니다.
+    post:
+      tags:
+        - Review API
+      summary: 리뷰 저장
+      description: 리뷰를 저장합니다.
+      operationId: saveReview
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ReviewRequestDto'
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseDtoBoolean'
+              examples:
+                REVIEW_CREATE_SUCCESS:
+                  description: 저장 성공 시 생성된 reviewId 값 반환
+                  value:
+                    code: 200
+                    status: SUCCESS
+                    data: reviewId 값
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseDtoBoolean'
+              examples:
+                DEFAULT:
+                  value:
+                    code: 500
+                    status: FAIL
+                    message: 에러 메세지 입니다.
+  /users/{seq}:
+    get:
+      tags:
+        - User API
+      summary: 회원 단건 조회 (seq)
+      description: seq로 조회 합니다.
+      operationId: findUserBySeq
+      parameters:
+        - name: seq
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseDtoBoolean'
+              examples:
+                USER_FINDONE:
+                  value:
+                    code: 200
+                    status: SUCCESS
+                    data: "{ \"seq\": 0, \"userId\": \"string\", \"nickName\": \"\
+                      string\", \"email\": \"string\", \"embdate\": \"LocalDateTime\"\
+                      , \"admin\": \"USER ADMIN\", \"UserStatus\": \"Y, N, HUMAN\"\
+                      }"
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseDtoBoolean'
+              examples:
+                DEFAULT:
+                  value:
+                    code: 500
+                    status: FAIL
+                    message: 에러 메세지 입니다.
+  /users/nickname/{nickName}:
+    get:
+      tags:
+        - User API
+      summary: 회원 조회 (nickName)
+      description: 닉네임으로 조회 합니다.
+      operationId: findUserByNickName
+      parameters:
+        - name: nickName
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseDtoBoolean'
+              examples:
+                USER_FINDONE:
+                  value:
+                    code: 200
+                    status: SUCCESS
+                    data: "{ \"seq\": 0, \"userId\": \"string\", \"nickName\": \"\
+                      string\", \"email\": \"string\", \"embdate\": \"LocalDateTime\"\
+                      , \"admin\": \"USER ADMIN\", \"UserStatus\": \"Y, N, HUMAN\"\
+                      }"
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseDtoBoolean'
+              examples:
+                DEFAULT:
+                  value:
+                    code: 500
+                    status: FAIL
+                    message: 에러 메세지 입니다.
+  /stores/store-name/{storeName}:
+    get:
+      tags:
+        - Store API
+      summary: 가게 이름으로 가게 전체 조회
+      description: 가게 이름으로 조회 합니다. (같은 이름의 가게가 있을 수 있어 List 반환
+      operationId: findStoreByStoreName
+      parameters:
+        - name: storeName
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ResponseDtoListStoreResponseDto'
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseDtoBoolean'
+              examples:
+                DEFAULT:
+                  value:
+                    code: 500
+                    status: FAIL
+                    message: 에러 메세지 입니다.
+  /stores/kakao-idx/{kakaoIdx}:
+    get:
+      tags:
+        - Store API
+      summary: 'kakaoIdx 로 가게 단건 조회 '
+      description: kakaoIdx로 조회 합니다.(kakaoIdx는 고유값)
+      operationId: findStoreByKakaoIdx
+      parameters:
+        - name: kakaoIdx
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ResponseDtoStoreResponseDto'
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseDtoBoolean'
+              examples:
+                DEFAULT:
+                  value:
+                    code: 500
+                    status: FAIL
+                    message: 에러 메세지 입니다.
+  /reviews/{storeId}/{userId}:
+    get:
+      tags:
+        - Review API
+      summary: 리뷰 조회
+      description: 리뷰를 조회합니다.
+      operationId: getReview
+      parameters:
+        - name: storeId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+        - name: userId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ResponseDtoReviewResponseDto'
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseDtoBoolean'
+              examples:
+                DEFAULT:
+                  value:
+                    code: 500
+                    status: FAIL
+                    message: 에러 메세지 입니다.
+  /reviews/users/{userId}:
+    get:
+      tags:
+        - Review API
+      summary: 특정 사용자의 전체 리뷰 조회
+      description: 특정 사용자의 전체 리뷰를 조회합니다.
+      operationId: getReviewsByUser
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ResponseDtoListReviewResponseDto'
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseDtoBoolean'
+              examples:
+                DEFAULT:
+                  value:
+                    code: 500
+                    status: FAIL
+                    message: 에러 메세지 입니다.
+    delete:
+      tags:
+        - Review API
+      summary: 특정 사용자의 리뷰 전체 삭제
+      description: 특정 사용자의 리뷰 전체를 삭제합니다.
+      operationId: deleteAllReviewByUser
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseDtoBoolean'
+              examples:
+                REVIEW_DELETE_USER_SUCCESS:
+                  description: 삭제 성공 시 삭제된 userId 값 반환
+                  value:
+                    code: 200
+                    status: SUCCESS
+                    data: userId 값
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseDtoBoolean'
+              examples:
+                DEFAULT:
+                  value:
+                    code: 500
+                    status: FAIL
+                    message: 에러 메세지 입니다.
+  /reviews/stores/{storeId}:
+    get:
+      tags:
+        - Review API
+      summary: 특정 가게의 전체 리뷰 조회
+      description: 특정 가게의 전체 리뷰를 조회합니다.
+      operationId: getReviewsByStore
+      parameters:
+        - name: storeId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ResponseDtoListReviewResponseDto'
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseDtoBoolean'
+              examples:
+                DEFAULT:
+                  value:
+                    code: 500
+                    status: FAIL
+                    message: 에러 메세지 입니다.
+    delete:
+      tags:
+        - Review API
+      summary: 특정 가게의 리뷰 전체 삭제
+      description: 특정 가게의 리뷰 전체를 삭제합니다.
+      operationId: deleteAllReviewByStore
+      parameters:
+        - name: storeId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseDtoBoolean'
+              examples:
+                REVIEW_DELETE_STORE_SUCCESS:
+                  description: 삭제 성공 시 삭제된 storeId 값 반환
+                  value:
+                    code: 200
+                    status: SUCCESS
+                    data: storeId 값
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseDtoBoolean'
+              examples:
+                DEFAULT:
+                  value:
+                    code: 500
+                    status: FAIL
+                    message: 에러 메세지 입니다.
+components:
+  schemas:
+    UpdateUserRequestDto:
+      required:
+        - seq
+      type: object
+      properties:
+        seq:
+          type: integer
+          format: int64
+        pwd:
+          type: string
+        email:
+          type: string
+        nickName:
+          type: string
+        admin:
+          type: string
+          enum:
+            - USER
+            - ADMIN
+        userStatus:
+          type: string
+          enum:
+            - "Y"
+            - "N"
+            - HUMAN
+    EmbDate:
+      type: object
+      properties:
+        createDate:
+          type: string
+          format: date-time
+        updateDate:
+          type: string
+          format: date-time
+    ResponseDtoLong:
+      type: object
+      properties:
+        code:
+          type: integer
+          description: 응답 코드
+          format: int32
+          example: 200
+        status:
+          type: string
+          description: 응답 상태
+          example: SUCCESS
+          enum:
+            - SUCCESS
+            - FAIL
+        message:
+          type: string
+          description: 응답 메시지
+          example: 요청이 성공적으로 처리되었습니다.
+        data:
+          type: object
+          description: 응답 데이터
+          oneOf:
+            - type: string
+            - type: boolean
+            - type: integer
+              format: int64
+            - $ref: '#/components/schemas/SimpleUserResponseDto'
+            - $ref: '#/components/schemas/UserResponseDto'
+            - $ref: '#/components/schemas/StoreResponseDto'
+            - $ref: '#/components/schemas/ReviewResponseDto'
+      description: Generic 응답 DTO
+    ReviewResponseDto:
+      type: object
+      properties:
+        seq:
+          type: integer
+          format: int64
+        user:
+          type: integer
+          format: int64
+        store:
+          type: integer
+          format: int64
+        comment:
+          type: string
+          example: 리뷰 내용
+        embDate:
+          $ref: '#/components/schemas/EmbDate'
+    SimpleUserResponseDto:
+      type: object
+      properties:
+        userSeq:
+          type: integer
+          format: int64
+        nickName:
+          type: string
+    StoreResponseDto:
+      type: object
+      properties:
+        seq:
+          type: integer
+          format: int64
+        kakaoIdx:
+          type: string
+          example: kakao 인덱스
+        storeName:
+          type: string
+          example: 가게 이름
+        category:
+          type: string
+          example: 분류
+        latitude:
+          type: number
+          description: 위도
+          format: double
+          example: 37.55467884
+        longitude:
+          type: number
+          format: double
+          example: 126.9706069
+        region:
+          type: string
+          example: 지역
+        detailAddress:
+          type: string
+          example: 상세 주소
+        zipcode:
+          type: string
+          example: 우편번호
+        createDate:
+          type: string
+          format: date-time
+        updateDate:
+          type: string
+          format: date-time
+    UserResponseDto:
+      type: object
+      properties:
+        seq:
+          type: integer
+          format: int64
+        userId:
+          type: string
+        nickName:
+          type: string
+        email:
+          type: string
+        embdate:
+          $ref: '#/components/schemas/EmbDate'
+        admin:
+          type: string
+          enum:
+            - USER
+            - ADMIN
+        userStatus:
+          type: string
+          enum:
+            - "Y"
+            - "N"
+            - HUMAN
+    StoreRequestDto:
+      required:
+        - kakaoIdx
+      type: object
+      properties:
+        seq:
+          type: integer
+          format: int64
+        kakaoIdx:
+          pattern: ^\d+$
+          type: string
+          example: kakao 인덱스
+        storeName:
+          type: string
+          example: 가게이름
+        category:
+          type: string
+          example: 분류
+        latitude:
+          type: number
+          description: 위도
+          format: double
+          example: 37.55467884
+        longitude:
+          type: number
+          description: 경도
+          format: double
+          example: 126.9706069
+        region:
+          type: string
+          example: 지역
+        detailAddress:
+          type: string
+          example: 상세 주소
+        zipcode:
+          type: string
+          example: 우편번호
+    ReviewRequestDto:
+      required:
+        - store
+        - user
+      type: object
+      properties:
+        seq:
+          type: integer
+          format: int64
+        user:
+          type: integer
+          format: int64
+        store:
+          type: integer
+          format: int64
+        comment:
+          type: string
+          example: 리뷰 내용
+    JoinUserRequestDto:
+      required:
+        - nickName
+        - pwd
+        - userId
+      type: object
+      properties:
+        userId:
+          type: string
+        pwd:
+          type: string
+        nickName:
+          type: string
+        email:
+          type: string
+    ResponseDtoListStoreResponseDto:
+      type: object
+      properties:
+        code:
+          type: integer
+          description: 응답 코드
+          format: int32
+          example: 200
+        status:
+          type: string
+          description: 응답 상태
+          example: SUCCESS
+          enum:
+            - SUCCESS
+            - FAIL
+        message:
+          type: string
+          description: 응답 메시지
+          example: 요청이 성공적으로 처리되었습니다.
+        data:
+          type: array
+          description: 응답 데이터
+          items:
+            $ref: '#/components/schemas/StoreResponseDto'
+      description: Generic 응답 DTO
+    ResponseDtoStoreResponseDto:
+      type: object
+      properties:
+        code:
+          type: integer
+          description: 응답 코드
+          format: int32
+          example: 200
+        status:
+          type: string
+          description: 응답 상태
+          example: SUCCESS
+          enum:
+            - SUCCESS
+            - FAIL
+        message:
+          type: string
+          description: 응답 메시지
+          example: 요청이 성공적으로 처리되었습니다.
+        data:
+          $ref: '#/components/schemas/StoreResponseDto'
+      description: Generic 응답 DTO
+    ResponseDtoListReviewResponseDto:
+      type: object
+      properties:
+        code:
+          type: integer
+          description: 응답 코드
+          format: int32
+          example: 200
+        status:
+          type: string
+          description: 응답 상태
+          example: SUCCESS
+          enum:
+            - SUCCESS
+            - FAIL
+        message:
+          type: string
+          description: 응답 메시지
+          example: 요청이 성공적으로 처리되었습니다.
+        data:
+          type: array
+          description: 응답 데이터
+          items:
+            $ref: '#/components/schemas/ReviewResponseDto'
+      description: Generic 응답 DTO
+    ResponseDtoReviewResponseDto:
+      type: object
+      properties:
+        code:
+          type: integer
+          description: 응답 코드
+          format: int32
+          example: 200
+        status:
+          type: string
+          description: 응답 상태
+          example: SUCCESS
+          enum:
+            - SUCCESS
+            - FAIL
+        message:
+          type: string
+          description: 응답 메시지
+          example: 요청이 성공적으로 처리되었습니다.
+        data:
+          $ref: '#/components/schemas/ReviewResponseDto'
+      description: Generic 응답 DTO
+    ResponseDtoBoolean:
+      type: object
+      properties:
+        code:
+          type: integer
+          description: 응답 코드
+          format: int32
+          example: 200
+        status:
+          type: string
+          description: 응답 상태
+          example: SUCCESS
+          enum:
+            - SUCCESS
+            - FAIL
+        message:
+          type: string
+          description: 응답 메시지
+          example: 요청이 성공적으로 처리되었습니다.
+        data:
+          type: object
+          description: 응답 데이터
+          oneOf:
+            - type: string
+            - type: boolean
+            - type: integer
+              format: int64
+            - $ref: '#/components/schemas/SimpleUserResponseDto'
+            - $ref: '#/components/schemas/UserResponseDto'
+            - $ref: '#/components/schemas/StoreResponseDto'
+            - $ref: '#/components/schemas/ReviewResponseDto'
+      description: Generic 응답 DTO
