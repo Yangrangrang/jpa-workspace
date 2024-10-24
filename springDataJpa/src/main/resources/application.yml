@@ -24,3 +24,13 @@ logging:
     org.hibernate.sql: debug
 server:
   port: 8081
+
+springdoc:
+  api-docs:
+    enabled: true
+    path: /v3/api-docs  # OpenAPI 문서 경로
+  swagger-ui:
+    enabled: true
+    path: /swagger-ui.html  # Swagger UI 경로
+    url: /api-docs.yaml  # OpenAPI yaml 파일 경로 설정
+
